@@ -185,4 +185,3 @@ def test_graphql_middleware_anonymous():
         "locations": [{'line': 3, 'column': 16}]
     }
     assert response.data == {'project': {'id': 2, 'name': None}}
-
