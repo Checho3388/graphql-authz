@@ -37,7 +37,14 @@ Validation can be enforced using:
 import casbin
 from authz.middleware import enforcer_middleware
 
-from graphql import graphql_sync, GraphQLSchema, GraphQLObjectType, GraphQLField, GraphQLString
+from graphql import (
+    graphql_sync,
+    GraphQLSchema,
+    GraphQLObjectType,
+    GraphQLField,
+    GraphQLString,
+)
+
 
 schema = GraphQLSchema(
     query=GraphQLObjectType(
@@ -51,15 +58,24 @@ schema = GraphQLSchema(
 enforcer = casbin.Enforcer("model_file.conf", "policy_file.csv")
 casbin_middleware = enforcer_middleware(enforcer)
 
-
 query = """{ hello }"""
 
 # Authorized user ("authorized_user") has access to data
-response = graphql_sync(schema, query, middleware=[casbin_middleware], context_value={"role": "authorized_user"})
+response = graphql_sync(
+    schema,
+    query,
+    middleware=[casbin_middleware],
+    context_value={"role": "authorized_user"}
+)
 assert response.data == {"hello": "world"}
 
 # Unauthorized users ("unauthorized_user") are rejected
-response = graphql_sync(schema, query, middleware=[casbin_middleware], context_value={"role": "unauthorized_user"})
+response = graphql_sync(
+    schema,
+    query,
+    middleware=[casbin_middleware],
+    context_value={"role": "unauthorized_user"}
+)
 assert response.errors[0].message == "unauthorized_user can not query hello"
 ```
 
