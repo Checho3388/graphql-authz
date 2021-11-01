@@ -5,7 +5,7 @@ GraphQL-Authz is a Python3.6+ port of [GraphQL-Authz](https://github.com/node-ca
 implementation for the [Casbin](https://casbin.org/) authorization middleware.
 
 [![PyPi][pypi-image]](https://pypi.org/project/graphql-authz/)
-[![Travis][travis-ci-image]](https://travis-ci.com/Checho3388/graphql_authz)
+[![Build Status](https://app.travis-ci.com/Checho3388/graphql-authz.svg?branch=master)](https://app.travis-ci.com/Checho3388/graphql-authz)
 
 [pypi-image]: https://img.shields.io/pypi/v/graphql-authz.svg
 [travis-ci-image]: https://img.shields.io/travis/Checho3388/graphql-authz.svg
