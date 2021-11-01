@@ -37,7 +37,7 @@ setup(
     packages=find_packages(include=['authz', 'authz.*']),
     test_suite='tests',
     tests_require=test_requirements,
-    url='https://github.com/Checho3388/graphql_authz',
+    url='https://github.com/Checho3388/graphql-authz',
     version='0.1.0',
     zip_safe=False,
 )
