@@ -4,12 +4,11 @@
 GraphQL-Authz is a Python3.6+ port of [GraphQL-Authz](https://github.com/node-casbin/graphql-authz), the node.js
 implementation for the [Casbin](https://casbin.org/) authorization middleware.
 
-[![PyPi][pypi-image]][https://pypi.python.org/pypi/graphql_authz]
+[![PyPi][pypi-image]](https://pypi.org/project/graphql-authz/)
+[![Travis][travis-ci-image]](https://travis-ci.com/Checho3388/graphql_authz)
 
-[![Travis][travis-ci-image]][https://travis-ci.com/Checho3388/graphql_authz]
-
-[pypi-image]: https://img.shields.io/pypi/v/graphql_authz.svg
-[travis-ci-image]: https://img.shields.io/travis/Checho3388/graphql_authz.svg
+[pypi-image]: https://img.shields.io/pypi/v/graphql-authz.svg
+[travis-ci-image]: https://img.shields.io/travis/Checho3388/graphql-authz.svg
 
 This package should use with [GraphQL-core 3](https://github.com/graphql-python/graphql-core), allowing to limit access to each endpoint
 using casbin policy.
