@@ -6,6 +6,7 @@ implementation for the [Casbin](https://casbin.org/) authorization middleware.
 
 [![PyPi][pypi-image]](https://pypi.org/project/graphql-authz/)
 [![Build Status](https://app.travis-ci.com/Checho3388/graphql-authz.svg?branch=master)](https://app.travis-ci.com/Checho3388/graphql-authz)
+[![codecov](https://codecov.io/gh/Checho3388/graphql-authz/branch/master/graph/badge.svg?token=QEJH0IRDBV)](https://codecov.io/gh/Checho3388/graphql-authz)
 
 [pypi-image]: https://img.shields.io/pypi/v/graphql-authz.svg
 [travis-ci-image]: https://img.shields.io/travis/Checho3388/graphql-authz.svg
