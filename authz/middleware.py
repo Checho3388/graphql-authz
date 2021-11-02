@@ -1,26 +1,22 @@
 from authz.exceptions import PermissionInsufficientError
-from authz.utils import (
-    CASBIN_CONTEXT_ROLE_KEY,
-    info_to_path,
-)
+from authz.utils import info_to_path
+
+ANONYMOUS = "*"
 
 
 def enforcer_middleware(enforcer):
     def graphql_middleware(next, root, info, **args):
         context = info.context or {}
 
-        role = context.get("role", "*")
+        role = context.get("role", ANONYMOUS)
         path = info_to_path(info)
         action = info.operation.operation.value
-
-        if CASBIN_CONTEXT_ROLE_KEY not in context:
-            context[CASBIN_CONTEXT_ROLE_KEY] = role
 
         passed = enforcer.enforce(role, path, action)
         if passed:
             return next(root, info, **args)
         else:
-            if role == "*":
+            if role == ANONYMOUS:
                 role = "anonymous"
             raise PermissionInsufficientError(f"{role} can not {action} {path}")
 
