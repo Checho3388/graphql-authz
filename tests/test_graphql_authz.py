@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 
-"""Tests for `graphql_authz` package."""
+"""Tests for `authz` package."""
 import os
 
 import casbin
+import pytest
 from graphql import (
     GraphQLArgument,
     GraphQLField,
     GraphQLInt,
     GraphQLList,
+    GraphQLNonNull,
     GraphQLObjectType,
     GraphQLSchema,
     GraphQLString,
@@ -45,7 +47,7 @@ def given_a_graphql_schema() -> GraphQLSchema:
     )
     project_type = GraphQLObjectType(
         name="ProjectType", fields={
-            "id": GraphQLField(GraphQLInt),
+            "id": GraphQLNonNull(GraphQLInt),
             "name": GraphQLField(GraphQLString),
             "members": GraphQLField(
                 GraphQLList(member_type),
@@ -83,7 +85,7 @@ def given_a_graphql_schema() -> GraphQLSchema:
 def given_an_enforcer():
     return casbin.Enforcer(
         os.path.join(TESTS_PATH, "casbin_files/graphql.conf"),
-        os.path.join(TESTS_PATH, "casbin_files/graphql_policy.csv")
+        os.path.join(TESTS_PATH, "casbin_files/policy.csv")
     )
 
 
@@ -166,7 +168,8 @@ def test_graphql_middleware():
     }
 
 
-def test_graphql_middleware_anonymous():
+@pytest.mark.parametrize("context", ({"role": "*"}, {}))
+def test_graphql_middleware_as_anonymous(context):
     schema = given_a_graphql_schema()
     enforcer = given_an_enforcer()
 
@@ -177,7 +180,7 @@ def test_graphql_middleware_anonymous():
     }"""
     casbin_middleware = enforcer_middleware(enforcer)
 
-    response = graphql_sync(schema, query, middleware=[casbin_middleware], context_value={"role": "*"})
+    response = graphql_sync(schema, query, middleware=[casbin_middleware], context_value=context)
 
     assert response.errors[0].formatted == {
         "message": "anonymous can not query project.name",
@@ -185,3 +188,27 @@ def test_graphql_middleware_anonymous():
         "locations": [{'line': 3, 'column': 16}]
     }
     assert response.data == {'project': {'id': 2, 'name': None}}
+
+
+def test_graphql_middleware_unauthorized_querying_non_nullable_fields():
+    schema = given_a_graphql_schema()
+    enforcer = casbin.Enforcer(
+        os.path.join(TESTS_PATH, "casbin_files/graphql.conf"),
+        os.path.join(TESTS_PATH, "casbin_files/policy_with_project_id_restricted.csv")
+    )
+
+    query = """{
+        project(id: 2) {
+            id name
+        }
+    }"""
+    casbin_middleware = enforcer_middleware(enforcer)
+
+    response = graphql_sync(schema, query, middleware=[casbin_middleware], context_value={"role": "unathorized_user"})
+
+    assert response.errors[0].formatted == {
+        "message": "unathorized_user can not query project.id",
+        "path": ['project', 'id'],
+        "locations": [{'line': 3, 'column': 13}]
+    }
+    assert response.data == {'project': None}
