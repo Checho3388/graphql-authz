@@ -11,12 +11,12 @@ jobs:
         with:
           python-version: 3.8
       - name: Install dependencies
-        run: python setup.py install
-      - name: Install test dependencies
-        run: pip install -r requirements_dev.txt
+        run: |
+          pip install -r requirements_dev.txt
+          python setup.py install
       - name: Run tests and collect coverage
         run: |
-          coverage run tests.py
+          coverage run --source authz -m pytest
           coverage xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2.1.0
