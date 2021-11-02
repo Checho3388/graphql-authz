@@ -11,7 +11,7 @@ jobs:
         with:
           python-version: 3.8
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: python setup.py
       - name: Run tests and collect coverage
         run: |
           coverage run tests.py
