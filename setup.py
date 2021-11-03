@@ -1,7 +1,12 @@
 #!/usr/bin/env python
 
 """The setup script."""
-from setuptools import setup, find_packages
+from setuptools import (
+    find_packages,
+    setup,
+)
+
+from authz import __version__
 
 
 with open('README.md') as readme_file:
@@ -38,6 +43,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/Checho3388/graphql-authz',
-    version='0.1.1',
+    version=__version__,
     zip_safe=False,
 )
