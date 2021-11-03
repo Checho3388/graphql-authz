@@ -1,8 +1,8 @@
 # graphql-authz
 
 
-GraphQL-Authz is a Python3.6+ port of [GraphQL-Authz](https://github.com/node-casbin/graphql-authz), the node.js
-implementation for the [Casbin](https://casbin.org/) authorization middleware.
+GraphQL-Authz is a Python3.6+ port of [GraphQL-Authz](https://github.com/node-casbin/graphql-authz), the
+[Casbin](https://casbin.org/) authorization middleware implementation in [Node.js](https://nodejs.org/en/).
 
 [![PyPi][pypi-image]](https://pypi.org/project/graphql-authz/)
 [![Build Status](https://app.travis-ci.com/Checho3388/graphql-authz.svg?branch=master)](https://app.travis-ci.com/Checho3388/graphql-authz)
@@ -11,8 +11,8 @@ implementation for the [Casbin](https://casbin.org/) authorization middleware.
 [pypi-image]: https://img.shields.io/pypi/v/graphql-authz.svg
 [travis-ci-image]: https://img.shields.io/travis/Checho3388/graphql-authz.svg
 
-This package should use with [GraphQL-core 3](https://github.com/graphql-python/graphql-core), allowing to limit access to each endpoint
-using casbin policy.
+This package should be used with [GraphQL-core 3](https://github.com/graphql-python/graphql-core), providing the
+capability to limit access to each GraphQL resource with the authorization middleware.
 
 ## Installation
 
@@ -24,15 +24,15 @@ pip install graphql-authz
 
 Get Started
 --------
-This package should use with graphql and graphql-middleware.
-To limit access to each graphql resource you can use a casbin policy. For example,
+
+Limit the access to each GraphQL resource with a policy. For example,
 given this policy for an [RBAC](https://casbin.org/docs/en/rbac) model:
 
 ```csv
 p, authorized_user, hello, query
 ```
 
-Validation can be enforced using:
+Authorization can be enforced using:
 
 ```python3
 import casbin
@@ -57,7 +57,7 @@ schema = GraphQLSchema(
         }))
 
 enforcer = casbin.Enforcer("model_file.conf", "policy_file.csv")
-casbin_middleware = enforcer_middleware(enforcer)
+authorization_middleware = enforcer_middleware(enforcer)
 
 query = """{ hello }"""
 
@@ -65,7 +65,7 @@ query = """{ hello }"""
 response = graphql_sync(
     schema,
     query,
-    middleware=[casbin_middleware],
+    middleware=[authorization_middleware],
     context_value={"role": "authorized_user"}
 )
 assert response.data == {"hello": "world"}
@@ -74,7 +74,7 @@ assert response.data == {"hello": "world"}
 response = graphql_sync(
     schema,
     query,
-    middleware=[casbin_middleware],
+    middleware=[authorization_middleware],
     context_value={"role": "unauthorized_user"}
 )
 assert response.errors[0].message == "unauthorized_user can not query hello"
@@ -83,5 +83,9 @@ assert response.errors[0].message == "unauthorized_user can not query hello"
 For more interesting scenarios see `tests` folder.
 
 ## Credits
+
+Implementation was heavily inspired by the [Node.js](https://nodejs.org/en/) middleware [GraphQL-Authz](https://github.com/node-casbin/graphql-authz).
+
+Authorization enforcement is based on [Casbin](https://casbin.org/) authorization library.
 
 This package was created with [Cookiecutter](https://github.com/audreyr/cookiecutter) and the [`audreyr/cookiecutter-pypackage`](https://github.com/audreyr/cookiecutter-pypackage) project template.
